@@ -5,6 +5,7 @@ import authroute from "./routes/AuthRoutes.js";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import blogroute from "./routes/BlogRoute.js";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -13,29 +14,16 @@ const app = express();
 // Connect to database
 connectDb();
 
-// CORS setup - Allow multiple origins
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://full-stack-project-frontend-phi.vercel.app',
-  'https://full-stack-project-frontend-phi.vercel.app',
-  'https://full-stack-project-backend-lovat.vercel.app'
-];
-
+// CORS setup - Allow all for now (temporary fix)
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
+  origin: true, // Allow all origins temporarily
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Origin', 'X-Requested-With', 'Accept']
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -49,11 +37,12 @@ app.get("/", (req, res) => {
   });
 });
 
-// Health check route
+// Health check route (fixed)
 app.get("/database", (req, res) => {
   res.json({
     status: "healthy",
-    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected"
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    time: new Date().toISOString()
   });
 });
 
@@ -65,13 +54,13 @@ app.use('/api/v1/blog/', blogroute);
 app.use((req, res) => {
   res.status(404).json({
     status: false,
-    message: `Route ${req.url} not found`
+    message: `Route ${req.method} ${req.url} not found`
   });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Error:', err.stack);
   res.status(500).json({
     status: false,
     message: err.message || 'Something went wrong!'
@@ -86,5 +75,6 @@ if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log("Server is running on port", PORT);
+    console.log("MongoDB status:", mongoose.connection.readyState === 1 ? "Connected" : "Disconnected");
   });
 }
