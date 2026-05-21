@@ -16,7 +16,7 @@ connectDb();
 // CORS setup
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://your-frontend.vercel.app', //  frontend URL 
+  'https://full-stack-project-frontend-phi.vercel.app', //  frontend URL 
   process.env.FRONTEND_URL
 ];
 
