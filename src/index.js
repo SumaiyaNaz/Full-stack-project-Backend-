@@ -18,14 +18,14 @@ connectDb();
 
 // CORS setup - Allow all for now (temporary fix)
 app.use(cors({
-  origin: true, // Allow all origins temporarily
+  origin: ['https://full-stack-project-frontend-phi.vercel.app','http://localhost:5173/'], // Allow all origins temporarily
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Origin', 'X-Requested-With', 'Accept']
 }));
 
 // Handle preflight requests
-app.options('/', cors());
+// app.options('/', cors());
 
 app.use(express.json());
 app.use(cookieParser());
