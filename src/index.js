@@ -69,14 +69,16 @@ app.use((err, req, res, next) => {
   });
 });
 
-// For Vercel serverless
-export default app;
+
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log("Server is running on port", PORT);
-    console.log("MongoDB status:", mongoose.connection.readyState === 1 ? "Connected" : "Disconnected");
+   
   });
 }
+
+// For Vercel serverless
+export default app;
