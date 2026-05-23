@@ -15,8 +15,6 @@ const app = express();
 
 // Connect to database
 connectDb();
-console.log(connectDb);
-
 
 // CORS setup - Allow all for now (temporary fix)
 app.use(cors({
