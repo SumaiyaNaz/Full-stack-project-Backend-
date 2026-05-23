@@ -1,5 +1,5 @@
-// import dns from 'dns'
-// dns.setServers(['8.8.8.8','1.1.1.1'])
+import dns from 'dns'
+dns.setServers(['8.8.8.8','1.1.1.1'])
 import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./config/db.js";
@@ -20,8 +20,8 @@ connectDb();
 app.use(cors({
   origin: ['https://full-stack-project-frontend-phi.vercel.app','http://localhost:5173'], // Allow all origins temporarily
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Origin', 'X-Requested-With', 'Accept']
+   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Handle preflight requests
